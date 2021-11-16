@@ -11,7 +11,7 @@ from PIL import Image
 
 def main():
     print('====START BOT BOMB====')
-    Image.open(im_path("hero.png")).convert("RGB").save("hero.png")
+
     win = pygetwindow.getWindowsWithTitle('Bombcrypto')[0]
     win.resizeTo(640, 500)
     win.moveTo(0, 0)
