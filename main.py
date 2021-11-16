@@ -6,12 +6,16 @@ import time
 
 import pyautogui
 import pygetwindow
+from PIL import Image
 
 
 def main():
     print('====START BOT BOMB====')
+    Image.open(im_path("hero.png")).convert("RGB").save("hero.png")
     win = pygetwindow.getWindowsWithTitle('Bombcrypto')[0]
-    win.size = (640, 500)
+    win.resizeTo(640, 500)
+    win.moveTo(0, 0)
+    win.activate()
 
     input_time = input('COUNT DOWN SETUP HERO (min): ')
     hero_amount = input('HERO AMOUNT (number): ')
@@ -30,7 +34,7 @@ def main():
 
     reset_position_time = reset_position_time * sec
     time_back = cal_time_click_back(reset_position_time, count_down)
-    start_game()
+    # start_game()
 
     while True:
         print('countdown sec: ', count_down)
@@ -74,6 +78,7 @@ def cal_time_click_back(input_time, countdown_time):
 
 
 def set_connect_wallet_button():
+    # Point(x=320, y=379)
     connect_wallet_button = pyautogui.locateOnScreen(
         im_path('connect-wallet.png'), grayscale=True, confidence=.8)
 
@@ -82,7 +87,7 @@ def set_connect_wallet_button():
 
 def start_game():
     print('===connect wallet===')
-
+    # Point(x=340, y=300)
     connect_wallet_button = set_connect_wallet_button()
 
     if connect_wallet_button is None:
@@ -132,6 +137,7 @@ def hero_work(hero_amount):
     time.sleep(2)
     print('====start hero to work====')
 
+    # Point(x=528, y=410)
     hero_button = pyautogui.locateOnScreen(
         im_path('hero.png'), grayscale=True, confidence=.95)
 
@@ -143,6 +149,8 @@ def hero_work(hero_amount):
     pyautogui.click(hero_button)
     time.sleep(2)
 
+    # Point(x=283, y=242) work button first line
+    # Point(x=285, y=398) work button last line
     while True:
         work_button = pyautogui.locateOnScreen(
             im_path('work-non-active.png'), grayscale=True, confidence=.95)
@@ -193,6 +201,7 @@ def click_close_button():
 
 
 def set_close_button():
+    # Point(x=103, y=165)
     close_button_hero = pyautogui.locateOnScreen(
         im_path('close.png'), grayscale=True, confidence=.8)
 
@@ -226,6 +235,7 @@ def close_treasure_hunt():
 
 
 def new_map():
+    # Point(x=324, y=390)
     print('===check new map button===')
     new_map_button = pyautogui.locateOnScreen(
         im_path('new-map.png'), grayscale=True, confidence=.95)
