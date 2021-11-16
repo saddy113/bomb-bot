@@ -1,14 +1,17 @@
-# from PIL.ImageOps import grayscale
+from PIL.ImageOps import grayscale
 
 import os
 import sys
 import time
 
 import pyautogui
+import pygetwindow
 
 
 def main():
     print('====START BOT BOMB====')
+    win = pygetwindow.getWindowsWithTitle('Bombcrypto')[0]
+    win.size = (640, 500)
 
     input_time = input('COUNT DOWN SETUP HERO (min): ')
     hero_amount = input('HERO AMOUNT (number): ')
@@ -18,8 +21,6 @@ def main():
     hero_amount = int(hero_amount)
     reset_position_time = int(reset_position_time)
 
-    # leve_time = count_down / 2
-
     sec = 60
     count_down = input_time * sec
     init_time = input_time * sec
@@ -28,6 +29,7 @@ def main():
         sys.exit('reset position time must not be more than count down')
 
     reset_position_time = reset_position_time * sec
+    time_back = cal_time_click_back(reset_position_time, count_down)
     start_game()
 
     while True:
@@ -40,9 +42,10 @@ def main():
 
         if count_down > 1:
             close_hunt_button = pyautogui.locateOnScreen(
-                im_path('back-main.png'), grayscale=True, confidence=.95)
+                im_path('back-main.png'), grayscale=True, confidence=.8)
 
             new_map()
+            error_page()
 
             # start new round
             if close_hunt_button is None:
@@ -50,9 +53,10 @@ def main():
                 treasure_hunt()
 
             # back to main menu edit bug
-            if count_down == reset_position_time:
+            if count_down == time_back:
                 close_treasure_hunt()
                 treasure_hunt()
+                time_back = cal_time_click_back(reset_position_time, count_down)
 
         if count_down <= 1:
             close_treasure_hunt()
@@ -63,6 +67,10 @@ def main():
 
 def im_path(filename):
     return os.path.join('images', filename)
+
+
+def cal_time_click_back(input_time, countdown_time):
+    return countdown_time - input_time
 
 
 def set_connect_wallet_button():
@@ -165,13 +173,30 @@ def hero_work(hero_amount):
             pyautogui.click(work)
             print("click hero not active: ", clickWork)
             time.sleep(1)
+            over_load = pyautogui.locateOnScreen(im_path('server-overload.png'), grayscale=True, confidence=.95)
+            if over_load is not None:
+                click_close_button()
+                time.sleep(5)
 
-    close_button_hero = pyautogui.locateOnScreen(
-        im_path('close.png'), grayscale=True, confidence=.95)
+    click_close_button()
+    time.sleep(1.5)
+
+
+def click_close_button():
+    close_button_hero = set_close_button()
+
+    if close_button_hero is None:
+        sys.exit("close hero button not found")
 
     pyautogui.moveTo(close_button_hero, duration=0.5)
     pyautogui.click(close_button_hero)
-    time.sleep(1.5)
+
+
+def set_close_button():
+    close_button_hero = pyautogui.locateOnScreen(
+        im_path('close.png'), grayscale=True, confidence=.8)
+
+    return close_button_hero
 
 
 def treasure_hunt():
@@ -201,7 +226,7 @@ def close_treasure_hunt():
 
 
 def new_map():
-    print('===click new map button===')
+    print('===check new map button===')
     new_map_button = pyautogui.locateOnScreen(
         im_path('new-map.png'), grayscale=True, confidence=.95)
 
@@ -209,6 +234,25 @@ def new_map():
         pyautogui.moveTo(new_map_button, duration=0.5)
         pyautogui.click(new_map_button)
         time.sleep(2)
+
+
+def set_ok_button():
+    ok_button = pyautogui.locateOnScreen(
+        im_path('ok.png'), grayscale=True, confidence=.95)
+
+    return ok_button
+
+
+def error_page():
+    print("===check unknown error===")
+    unknown_error = pyautogui.locateOnScreen(
+        im_path('unknown.png'), grayscale=True, confidence=.95)
+
+    if unknown_error is not None:
+        ok_button = set_ok_button()
+        pyautogui.moveTo(ok_button, duration=0.5)
+        pyautogui.click(ok_button)
+        time.sleep(10)
 
 
 if __name__ == '__main__':
