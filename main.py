@@ -1,4 +1,4 @@
-from PIL.ImageOps import grayscale
+# from PIL.ImageOps import grayscale
 
 import os
 import sys
@@ -6,16 +6,11 @@ import time
 
 import pyautogui
 import pygetwindow
-from PIL import Image
+# from PIL import Image
 
 
 def main():
     print('====START BOT BOMB====')
-
-    win = pygetwindow.getWindowsWithTitle('Bombcrypto')[0]
-    win.resizeTo(640, 500)
-    win.moveTo(0, 0)
-    win.activate()
 
     input_time = input('COUNT DOWN SETUP HERO (min): ')
     hero_amount = input('HERO AMOUNT (number): ')
@@ -34,6 +29,11 @@ def main():
 
     reset_position_time = reset_position_time * sec
     time_back = cal_time_click_back(reset_position_time, count_down)
+
+    win = pygetwindow.getWindowsWithTitle('Bombcrypto')[0]
+    win.resizeTo(640, 500)
+    win.moveTo(0, 0)
+
     # start_game()
 
     while True:
@@ -53,7 +53,7 @@ def main():
 
             # start new round
             if close_hunt_button is None:
-                hero_work(hero_amount)
+                click_hero_icon(hero_amount)
                 treasure_hunt()
 
             # back to main menu edit bug
@@ -110,16 +110,15 @@ def start_game():
 
     time.sleep(3)
 
-    print('sing metamask')
-    sing = pyautogui.locateOnScreen(
-        im_path('sing.png'), grayscale=True, confidence=.95)
+    print('sign metamask')
+    sign = pyautogui.locateOnScreen(
+        im_path('sign.png'), grayscale=True, confidence=.95)
 
-    # print(sing)
-    if sing is None:
-        sys.exit("sing button not found")
+    if sign is None:
+        sys.exit("sign button not found")
 
-    pyautogui.moveTo(sing, duration=0.5)
-    pyautogui.click(sing)
+    pyautogui.moveTo(sign, duration=0.5)
+    pyautogui.click(sign)
 
     # loop wait for loading
     while True:
@@ -133,7 +132,7 @@ def start_game():
         print("wait for loading")
 
 
-def hero_work(hero_amount):
+def click_hero_icon(hero_amount):
     time.sleep(2)
     print('====start hero to work====')
 
@@ -141,50 +140,59 @@ def hero_work(hero_amount):
     hero_button = pyautogui.locateOnScreen(
         im_path('hero.png'), grayscale=True, confidence=.95)
 
+    # find hero button menu anc click
     # print(hero_button)
     if hero_button is None:
         sys.exit("hero button not found")
 
     pyautogui.moveTo(hero_button, duration=0.5)
     pyautogui.click(hero_button)
+    hero_work(hero_amount)
+
+
+def hero_work(hero_amount):
     time.sleep(2)
 
-    # Point(x=283, y=242) work button first line
-    # Point(x=285, y=398) work button last line
-    while True:
-        work_button = pyautogui.locateOnScreen(
-            im_path('work-non-active.png'), grayscale=True, confidence=.95)
+    # set button work active and not active
+    work_button_not_active = pyautogui.locateOnScreen(
+        im_path('work-non-active.png'), grayscale=True, confidence=.95)
 
-        work_button_active = pyautogui.locateOnScreen(
+    work_button_active = pyautogui.locateOnScreen(
             im_path('work-active.png'), grayscale=True, confidence=.95)
 
-        if work_button is not None:
-            pyautogui.moveTo(work_button, duration=0.5)
-            pyautogui.drag(0, -500, duration=0.2)
+    # go to work button and drag to height
+    if work_button_not_active is not None:
+        pyautogui.moveTo(work_button_not_active, duration=0.5)
+    elif work_button_active is not None:
+        pyautogui.moveTo(work_button_active, duration=0.5)
+    else:
+        click_close_button()
+        hero_work(hero_amount)
+
+    time.sleep(1.5)
+    pyautogui.drag(0, -300, duration=0.2)
+    time.sleep(4)
+
+    # loop click hero to work!
+    # but work not active is None will break loop
+    for hero_count in range(hero_amount):
+        work_not_active = pyautogui.locateOnScreen(im_path('work-non-active.png'), grayscale=True, confidence=.95)
+        work_active = pyautogui.locateOnScreen(im_path('work-active.png'), grayscale=True, confidence=.95)
+
+        if work_not_active is not None:
+            pyautogui.moveTo(work_not_active, duration=0.5)
+            pyautogui.click(work_not_active)
+            print('click hero work: ', hero_count + 1)
             time.sleep(1)
+        elif work_active is not None:
+            print("stop click hero work")
             break
-
-        elif work_button_active:
-            pyautogui.moveTo(work_button_active, duration=0.5)
-            pyautogui.drag(0, -500, duration=0.2)
-            time.sleep(1)
-            break
-
-    work = None
-    for work in pyautogui.locateAllOnScreen(im_path('work-non-active.png'), grayscale=True, confidence=.95):
-        print('work not active')
-
-    time.sleep(1)
-
-    if work is not None:
-        for clickWork in range(hero_amount + 1):
-            pyautogui.click(work)
-            print("click hero not active: ", clickWork)
-            time.sleep(1)
+        else:
             over_load = pyautogui.locateOnScreen(im_path('server-overload.png'), grayscale=True, confidence=.95)
             if over_load is not None:
                 click_close_button()
                 time.sleep(5)
+            hero_count -= 1
 
     click_close_button()
     time.sleep(1.5)
@@ -236,11 +244,11 @@ def close_treasure_hunt():
 
 def new_map():
     # Point(x=324, y=390)
-    print('===check new map button===')
     new_map_button = pyautogui.locateOnScreen(
         im_path('new-map.png'), grayscale=True, confidence=.95)
 
     if new_map_button is not None:
+        print("===new map===")
         pyautogui.moveTo(new_map_button, duration=0.5)
         pyautogui.click(new_map_button)
         time.sleep(2)
@@ -254,12 +262,11 @@ def set_ok_button():
 
 
 def error_page():
-    print("===check unknown error===")
-    unknown_error = pyautogui.locateOnScreen(
-        im_path('unknown.png'), grayscale=True, confidence=.95)
 
-    if unknown_error is not None:
-        ok_button = set_ok_button()
+    ok_button = set_ok_button()
+
+    if ok_button is not None:
+        print("===page error===")
         pyautogui.moveTo(ok_button, duration=0.5)
         pyautogui.click(ok_button)
         time.sleep(10)
