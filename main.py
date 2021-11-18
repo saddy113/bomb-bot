@@ -12,11 +12,12 @@ import util
 
 def main():
     print('====START BOT BOMB====')
-
+    input_display = input('How many screens are open : ')
     input_time = input('COUNT DOWN SETUP HERO (min): ')
     hero_amount = input('HERO AMOUNT (number): ')
     # reset_position_time = input('RESET POSITION (min): ')
 
+    input_display = int(input_display)
     input_time = int(input_time)
     hero_amount = int(hero_amount)
     # reset_position_time = int(reset_position_time)
@@ -32,68 +33,80 @@ def main():
     # reset_position_time = reset_position_time * sec
     # time_back = cal_time_click_back(reset_position_time, count_down)
 
-    win = pygetwindow.getWindowsWithTitle('Bombcrypto')[0]
-    win.resizeTo(640, 500)
-    win.moveTo(0, 0)
+    for i in range(input_display):
+        win = pygetwindow.getWindowsWithTitle('Bombcrypto')[i]
+        win.resizeTo(640, 500)
 
     while True:
         print('countdown sec: ', count_down)
         count_down -= 1
 
-        # check is connect wallet button
-        wallet_button = button.wallet()
-        if wallet_button is not None:
-            util.move_click(wallet_button)
+        # set button
+        wallet_buttons = list(button.wallet())
+        metamask_buttons = list(button.metamask())
+        sign_buttons = list(button.sign())
+        ok_buttons = list(button.ok())
+        new_map_buttons = list(button.new_map())
+        close_hunt_buttons = list(button.close_hunt())
+        hero_buttons = list(button.hero())
 
-        # check is metamask button
-        metamask_button = button.metamask()
-        if metamask_button is not None:
-            util.move_click(metamask_button)
+        for wallet_button in wallet_buttons:
+            # check is connect wallet button
+            if wallet_button is not None:
+                util.move_click(wallet_button)
 
-        # check is sign button
-        sign_button = button.sign()
-        if sign_button is not None:
-            util.move_click(sign_button)
+        for metamask_button in metamask_buttons:
+            # check is metamask button
+            if metamask_button is not None:
+                util.move_click(metamask_button)
 
-        # check is ok button
-        ok_button = button.ok()
-        if ok_button is not None:
-            util.move_click(ok_button)
-            time.sleep(2)
-            pyautogui.press('f5')
+        for sign_button in sign_buttons:
+            # check is sign button
+            if sign_button is not None:
+                util.move_click(sign_button)
 
-        # check is new map button
-        new_map_button = button.new_map()
-        if new_map_button is not None:
-            util.move_click(new_map_button)
+        for ok_button in ok_buttons:
+            # check is ok button
+            if ok_button is not None:
+                util.move_click(ok_button)
+                time.sleep(2)
+                pyautogui.press('f5')
 
-        # check is close hunt button
-        close_hunt_button = button.close_hunt()
-        if close_hunt_button is not None:
-            if count_down <= 1:
-                util.move_click(close_hunt_button)
-                count_down = init_time
-            else:
-                time.sleep(0.5)
-        elif count_down > 1:
-            hero_button = button.hero()
-            if hero_button is not None:
-                print('=== new round ===')
-                start_process(hero_amount)
+        for new_map_button in new_map_buttons:
+            print("new map")
+            # check is new map button
+            if new_map_button is not None:
+                util.move_click(new_map_button)
+
+        for close_hunt_button in close_hunt_buttons:
+            if close_hunt_button is not None:
+                if count_down <= 1:
+                    util.move_click(close_hunt_button)
+                    if close_hunt_button == close_hunt_buttons[-1]:
+                        count_down = init_time
+                else:
+                    time.sleep(0.1)
+
+        if count_down > 1:
+            for hero_button in hero_buttons:
+                if hero_button is not None:
+                    print('=== new round setup hero===')
+                    start_process(hero_amount, hero_button)
         else:
             print("connect system failed")
             count_timeout += 1
             if count_timeout == 30:
+                time_str = time.strftime("%Y%m%d-%H%M%S")
+                time_file_name = time_str + '.png'
+                pyautogui.screenshot(util.im_path_err(time_file_name))
                 pyautogui.press('f5')
                 count_timeout = 0
                 time.sleep(5)
 
 
-def start_process(hero_amount):
-    # set and click hero button
-    hero_button = button.hero()
-    util.move_click(hero_button)
+def start_process(hero_amount, hero_button):
 
+    util.move_click(hero_button)
     hero_work(hero_amount)
     treasure_hunt()
 

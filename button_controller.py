@@ -4,43 +4,43 @@ import util
 
 
 def wallet():
-    connect_wallet_button = pyautogui.locateOnScreen(
+    connect_wallet_button = pyautogui.locateAllOnScreen(
         util.im_path('connect-wallet.png'), grayscale=True, confidence=.8)
     return connect_wallet_button
 
 
 def metamask():
-    metamask_button = pyautogui.locateOnScreen(
+    metamask_button = pyautogui.locateAllOnScreen(
         util.im_path('metamask.png'), grayscale=True, confidence=.95)
     return metamask_button
 
 
 def sign():
-    sign_button = pyautogui.locateOnScreen(
+    sign_button = pyautogui.locateAllOnScreen(
         util.im_path('sign.png'), grayscale=True, confidence=.95)
     return sign_button
 
 
 def ok():
-    ok_button = pyautogui.locateOnScreen(
+    ok_button = pyautogui.locateAllOnScreen(
         util.im_path('ok.png'), grayscale=True, confidence=.95)
     return ok_button
 
 
 def new_map():
-    new_map_button = pyautogui.locateOnScreen(
+    new_map_button = pyautogui.locateAllOnScreen(
         util.im_path('new-map.png'), grayscale=True, confidence=.95)
     return new_map_button
 
 
 def close_hunt():
-    close_hunt_button = pyautogui.locateOnScreen(
+    close_hunt_button = pyautogui.locateAllOnScreen(
         util.im_path('back-main.png'), grayscale=True, confidence=.95)
     return close_hunt_button
 
 
 def hero():
-    hero_button = pyautogui.locateOnScreen(
+    hero_button = pyautogui.locateAllOnScreen(
         util.im_path('hero.png'), grayscale=True, confidence=.95)
     return hero_button
 
