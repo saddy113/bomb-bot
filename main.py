@@ -1,6 +1,6 @@
 # from PIL.ImageOps import grayscale
 
-import sys
+# import sys
 import time
 import pyautogui
 import pygetwindow
@@ -47,6 +47,7 @@ def main():
         new_map_buttons = list(button.new_map())
         close_hunt_buttons = list(button.close_hunt())
         hero_buttons = list(button.hero())
+        load_bars = list(button.loading_bar())
 
         for wallet_button in wallet_buttons:
             # check is connect wallet button
@@ -63,6 +64,13 @@ def main():
                 util.move_click(ok_button)
                 time.sleep(2)
                 refresh_page()
+
+        for load_bar in load_bars:
+            if load_bar is not None:
+                count_timeout += 1
+                util.move_click(load_bar)
+                time.sleep(1)
+                count_timeout = time_out(count_timeout, 'load_bar')
 
         for new_map_button in new_map_buttons:
             print("new map")
@@ -97,6 +105,7 @@ def login(wallet_button):
     util.move_click(wallet_button)
     count_finding = 0
     while True:
+        time.sleep(2)
         print('find metamask button')
         metamask_button = button.metamask()
         # check is metamask button
@@ -113,9 +122,8 @@ def login(wallet_button):
         else:
             count_finding += 1
 
-        time.sleep(2)
-
     while True:
+        time.sleep(2)
         print('find sign button')
         sign_button = button.sign()
         # check is metamask button
@@ -130,7 +138,9 @@ def login(wallet_button):
         else:
             count_finding += 1
 
-        time.sleep(2)
+    print("click complete wait 5 sec")
+    time.sleep(5)
+    print("===end to login and back to loop===")
 
 
 def start_process(hero_amount, hero_button):

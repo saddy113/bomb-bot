@@ -67,3 +67,9 @@ def treasure_hunt():
     treasure_hunt_button = pyautogui.locateOnScreen(
         util.im_path('start-game.png'), grayscale=True, confidence=.95)
     return treasure_hunt_button
+
+
+def loading_bar():
+    load_bar = pyautogui.locateAllOnScreen(
+        util.im_path('loading-bar.png'), grayscale=True, confidence=.95)
+    return load_bar
