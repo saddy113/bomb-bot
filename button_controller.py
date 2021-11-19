@@ -5,18 +5,18 @@ import util
 
 def wallet():
     connect_wallet_button = pyautogui.locateAllOnScreen(
-        util.im_path('connect-wallet.png'), grayscale=True, confidence=.8)
+        util.im_path('connect-wallet.png'), grayscale=True, confidence=.95)
     return connect_wallet_button
 
 
 def metamask():
-    metamask_button = pyautogui.locateAllOnScreen(
+    metamask_button = pyautogui.locateOnScreen(
         util.im_path('metamask.png'), grayscale=True, confidence=.95)
     return metamask_button
 
 
 def sign():
-    sign_button = pyautogui.locateAllOnScreen(
+    sign_button = pyautogui.locateOnScreen(
         util.im_path('sign.png'), grayscale=True, confidence=.95)
     return sign_button
 

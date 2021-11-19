@@ -43,8 +43,6 @@ def main():
 
         # set button
         wallet_buttons = list(button.wallet())
-        metamask_buttons = list(button.metamask())
-        sign_buttons = list(button.sign())
         ok_buttons = list(button.ok())
         new_map_buttons = list(button.new_map())
         close_hunt_buttons = list(button.close_hunt())
@@ -53,24 +51,18 @@ def main():
         for wallet_button in wallet_buttons:
             # check is connect wallet button
             if wallet_button is not None:
-                util.move_click(wallet_button)
-
-        for metamask_button in metamask_buttons:
-            # check is metamask button
-            if metamask_button is not None:
-                util.move_click(metamask_button)
-
-        for sign_button in sign_buttons:
-            # check is sign button
-            if sign_button is not None:
-                util.move_click(sign_button)
+                print('click wallet button')
+                login(wallet_button)
+                print('finish login')
+                count_timeout += 1
+                count_timeout = time_out(count_timeout, 'wallet')
 
         for ok_button in ok_buttons:
             # check is ok button
             if ok_button is not None:
                 util.move_click(ok_button)
                 time.sleep(2)
-                pyautogui.press('f5')
+                refresh_page()
 
         for new_map_button in new_map_buttons:
             print("new map")
@@ -84,6 +76,7 @@ def main():
                     util.move_click(close_hunt_button)
                     if close_hunt_button == close_hunt_buttons[-1]:
                         count_down = init_time
+                        count_timeout = 0
                 else:
                     time.sleep(0.1)
 
@@ -95,17 +88,52 @@ def main():
         else:
             print("connect system failed")
             count_timeout += 1
-            if count_timeout == 30:
-                time_str = time.strftime("%Y%m%d-%H%M%S")
-                time_file_name = time_str + '.png'
-                pyautogui.screenshot(util.im_path_err(time_file_name))
-                pyautogui.press('f5')
-                count_timeout = 0
-                time.sleep(5)
+            count_timeout = time_out(count_timeout)
+
+
+def login(wallet_button):
+    time.sleep(1.5)
+
+    util.move_click(wallet_button)
+    count_finding = 0
+    while True:
+        print('find metamask button')
+        metamask_button = button.metamask()
+        # check is metamask button
+        if metamask_button is not None:
+            print('click metamask button')
+            util.move_click(metamask_button)
+            count_finding = 0
+            break
+        elif count_finding >= 10:
+            print('find metamask failed')
+            time_out(count_finding, 'metamask')
+            count_finding = 0
+            break
+        else:
+            count_finding += 1
+
+        time.sleep(2)
+
+    while True:
+        print('find sign button')
+        sign_button = button.sign()
+        # check is metamask button
+        if sign_button is not None:
+            print('click sign button')
+            util.move_click(sign_button)
+            break
+        elif count_finding >= 10:
+            print('find sign failed')
+            time_out(count_finding, 'sign')
+            break
+        else:
+            count_finding += 1
+
+        time.sleep(2)
 
 
 def start_process(hero_amount, hero_button):
-
     util.move_click(hero_button)
     hero_work(hero_amount)
     treasure_hunt()
@@ -179,6 +207,22 @@ def treasure_hunt():
 
     if start_hunt is not None:
         util.move_click(start_hunt)
+
+
+def time_out(count_timeout, name='not_name'):
+    if count_timeout >= 10:
+        time_str = time.strftime("%Y%m%d-%H%M%S")
+        time_file_name = name + '-' + time_str + '.png'
+        pyautogui.screenshot(util.im_path_err(time_file_name))
+        refresh_page()
+        count_timeout = 0
+
+    return count_timeout
+
+
+def refresh_page():
+    pyautogui.press('f5')
+    time.sleep(5)
 
 
 if __name__ == '__main__':
