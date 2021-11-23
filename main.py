@@ -98,6 +98,8 @@ def main():
             count_timeout += 1
             count_timeout = time_out(count_timeout)
 
+        click_close_button()
+
 
 def login(wallet_button):
     time.sleep(1.5)
@@ -161,6 +163,7 @@ def hero_work(hero_amount):
 
     # go to work button and drag to height
     is_not_button_status = True
+    count_find_work_button = 0
     while is_not_button_status:
         if work_not_active_button is not None:
             pyautogui.moveTo(work_not_active_button, duration=0.5)
@@ -168,10 +171,18 @@ def hero_work(hero_amount):
         elif work_active_button is not None:
             pyautogui.moveTo(work_active_button, duration=0.5)
             is_not_button_status = False
+        elif count_find_work_button >= 10:
+            screenshot_err("find-work-button-more")
+            break
         else:
+            count_find_work_button += 1
             print('find not work button')
+            screenshot_err("not-work-button")
             click_close_button()
             time.sleep(1)
+
+    if count_find_work_button >= 10:
+        return
 
     # set drag display
     time.sleep(1.5)
@@ -196,6 +207,7 @@ def hero_work(hero_amount):
             break
         else:
             print('not found work button')
+            screenshot_err("not-found-work-button")
             time.sleep(5)
             click_close_button()
             hero_count -= 1
@@ -221,13 +233,17 @@ def treasure_hunt():
 
 def time_out(count_timeout, name='not_name'):
     if count_timeout >= 10:
-        time_str = time.strftime("%Y%m%d-%H%M%S")
-        time_file_name = name + '-' + time_str + '.png'
-        pyautogui.screenshot(util.im_path_err(time_file_name))
+        screenshot_err(name)
         refresh_page()
         count_timeout = 0
 
     return count_timeout
+
+
+def screenshot_err(name):
+    time_str = time.strftime("%Y%m%d-%H%M%S")
+    time_file_name = name + '-' + time_str + '.png'
+    pyautogui.screenshot(util.im_path_err(time_file_name))
 
 
 def refresh_page():
