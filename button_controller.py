@@ -4,8 +4,8 @@ import util
 
 
 def wallet():
-    connect_wallet_button = pyautogui.locateOnScreen(
-        util.im_path('connect-wallet.png'), grayscale=True, confidence=.8)
+    connect_wallet_button = pyautogui.locateAllOnScreen(
+        util.im_path('connect-wallet.png'), grayscale=True, confidence=.95)
     return connect_wallet_button
 
 
@@ -22,25 +22,25 @@ def sign():
 
 
 def ok():
-    ok_button = pyautogui.locateOnScreen(
+    ok_button = pyautogui.locateAllOnScreen(
         util.im_path('ok.png'), grayscale=True, confidence=.95)
     return ok_button
 
 
 def new_map():
-    new_map_button = pyautogui.locateOnScreen(
+    new_map_button = pyautogui.locateAllOnScreen(
         util.im_path('new-map.png'), grayscale=True, confidence=.95)
     return new_map_button
 
 
 def close_hunt():
-    close_hunt_button = pyautogui.locateOnScreen(
+    close_hunt_button = pyautogui.locateAllOnScreen(
         util.im_path('back-main.png'), grayscale=True, confidence=.95)
     return close_hunt_button
 
 
 def hero():
-    hero_button = pyautogui.locateOnScreen(
+    hero_button = pyautogui.locateAllOnScreen(
         util.im_path('hero.png'), grayscale=True, confidence=.95)
     return hero_button
 
@@ -67,3 +67,9 @@ def treasure_hunt():
     treasure_hunt_button = pyautogui.locateOnScreen(
         util.im_path('start-game.png'), grayscale=True, confidence=.95)
     return treasure_hunt_button
+
+
+def loading_bar():
+    load_bar = pyautogui.locateAllOnScreen(
+        util.im_path('loading-bar.png'), grayscale=True, confidence=.95)
+    return load_bar
