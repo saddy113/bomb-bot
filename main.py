@@ -2,6 +2,7 @@
 
 # import sys
 import time
+import sys
 import pyautogui
 import pygetwindow
 # from PIL import Image
@@ -12,26 +13,29 @@ import util
 
 def main():
     print('====START BOT BOMB====')
-    input_display = input('How many screens are open : ')
-    input_time = input('COUNT DOWN SETUP HERO (min): ')
-    hero_amount = input('HERO AMOUNT (number): ')
-    # reset_position_time = input('RESET POSITION (min): ')
+    input_display = input('How many screens are open : ') or 1
+    input_time = input('COUNT DOWN SETUP HERO (min): ') or 30
+    hero_amount = input('HERO AMOUNT (number): ') or 15
+    reset_position_time = input('RESET POSITION (min): ') or 0
 
     input_display = int(input_display)
     input_time = int(input_time)
     hero_amount = int(hero_amount)
-    # reset_position_time = int(reset_position_time)
+    reset_position_time = int(reset_position_time)
 
     count_timeout = 0
     sec = 60
     count_down = input_time * sec
     init_time = input_time * sec
 
-    # if reset_position_time > input_time:
-    #     sys.exit('reset position time must not be more than count down')
+    if reset_position_time > input_time:
+        sys.exit('reset position time must not be more than count down')
 
-    # reset_position_time = reset_position_time * sec
-    # time_back = cal_time_click_back(reset_position_time, count_down)
+    reset_position_time = reset_position_time * sec
+    time_back = cal_time_click_back(reset_position_time, count_down)
+
+    if time_back == count_down:
+        time_back = 0
 
     for i in range(input_display):
         win = pygetwindow.getWindowsWithTitle('Bombcrypto')[i]
@@ -39,6 +43,7 @@ def main():
 
     while True:
         print('countdown sec: ', count_down)
+        print(time_back)
         count_down -= 1
 
         # set button
@@ -85,7 +90,13 @@ def main():
                     if close_hunt_button == close_hunt_buttons[-1]:
                         count_down = init_time
                         count_timeout = 0
+                        time_back = cal_time_click_back(reset_position_time, count_down)
                 else:
+                    if time_back == count_down:
+                        if close_hunt_button == close_hunt_buttons[-1]:
+                            time_back = cal_time_click_back(reset_position_time, count_down)
+                        util.move_click(close_hunt_button)
+                        treasure_hunt()
                     time.sleep(0.1)
 
         if count_down > 1:
