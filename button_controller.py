@@ -9,12 +9,6 @@ def wallet():
     return connect_wallet_button
 
 
-def metamask():
-    metamask_button = pyautogui.locateOnScreen(
-        util.im_path('metamask.png'), grayscale=True, confidence=.95)
-    return metamask_button
-
-
 def sign():
     sign_button = pyautogui.locateOnScreen(
         util.im_path('sign.png'), grayscale=True, confidence=.95)

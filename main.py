@@ -5,6 +5,8 @@ import time
 import sys
 import pyautogui
 import pygetwindow
+from random import randrange
+
 # from PIL import Image
 
 import button_controller as button
@@ -13,22 +15,23 @@ import util
 
 def main():
     print('====START BOT BOMB====')
-    input_display = input('How many screens are open : ') or 1
-    input_time = input('COUNT DOWN SETUP HERO (min): ') or 30
+    print('***Do not cover the game screen***')
+    input_display = input('Browser Amount: ') or 1
+    input_countdown = input('COUNT DOWN SETUP HERO (min): ') or 15
     hero_amount = input('HERO AMOUNT (number): ') or 15
-    reset_position_time = input('RESET POSITION (min): ') or 0
+    reset_position_time = input('Return to main page (min): ') or 2
 
     input_display = int(input_display)
-    input_time = int(input_time)
+    input_countdown = int(input_countdown)
     hero_amount = int(hero_amount)
     reset_position_time = int(reset_position_time)
 
     count_timeout = 0
     sec = 60
-    count_down = input_time * sec
-    init_time = input_time * sec
+    count_down = input_countdown * sec
+    init_time = input_countdown * sec
 
-    if reset_position_time > input_time:
+    if reset_position_time > input_countdown:
         sys.exit('reset position time must not be more than count down')
 
     reset_position_time = reset_position_time * sec
@@ -42,8 +45,8 @@ def main():
         win.resizeTo(640, 500)
 
     while True:
-        print('countdown sec: ', count_down)
-        print(time_back)
+        print('countdown ', count_down, 'sec')
+        print('go to main page in', time_back, 'sec')
         count_down -= 1
 
         # set button
@@ -88,13 +91,13 @@ def main():
                 if count_down <= 1:
                     util.move_click(close_hunt_button)
                     if close_hunt_button == close_hunt_buttons[-1]:
-                        count_down = init_time
+                        count_down = randrange(init_time)
                         count_timeout = 0
-                        time_back = cal_time_click_back(reset_position_time, count_down)
+                        time_back = cal_time_click_back(randrange(reset_position_time), count_down)
                 else:
                     if time_back == count_down:
                         if close_hunt_button == close_hunt_buttons[-1]:
-                            time_back = cal_time_click_back(reset_position_time, count_down)
+                            time_back = cal_time_click_back(randrange(reset_position_time), count_down)
                         util.move_click(close_hunt_button)
                         treasure_hunt()
                     time.sleep(0.1)
@@ -117,23 +120,6 @@ def login(wallet_button):
 
     util.move_click(wallet_button)
     count_finding = 0
-    while True:
-        time.sleep(2)
-        print('find metamask button')
-        metamask_button = button.metamask()
-        # check is metamask button
-        if metamask_button is not None:
-            print('click metamask button')
-            util.move_click(metamask_button)
-            count_finding = 0
-            break
-        elif count_finding >= 10:
-            print('find metamask failed')
-            time_out(count_finding, 'metamask')
-            count_finding = 0
-            break
-        else:
-            count_finding += 1
 
     while True:
         time.sleep(2)
@@ -151,7 +137,7 @@ def login(wallet_button):
         else:
             count_finding += 1
 
-    print("click complete wait 5 sec")
+    print("click sign complete wait 5 sec")
     time.sleep(5)
     print("===end to login and back to loop===")
 
