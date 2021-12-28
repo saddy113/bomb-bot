@@ -48,6 +48,8 @@ def main():
         print('countdown ', count_down, 'sec')
         print('go to main page in', time_back, 'sec')
         count_down -= 1
+        if count_down < 0:
+            count_down = randrange(init_time)
 
         # set button
         wallet_buttons = list(button.wallet())
