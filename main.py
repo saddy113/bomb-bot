@@ -17,7 +17,7 @@ def main():
     print('====START BOT BOMB====')
     print('***Do not cover the game screen***')
     input_display = input('Browser Amount: ') or 1
-    input_countdown = input('COUNT DOWN SETUP HERO (min): ') or 15
+    input_countdown = input('COUNT DOWN SETUP HERO (min): ') or 40
     hero_amount = input('HERO AMOUNT (number): ') or 15
     reset_position_time = input('Return to main page (min): ') or 2
 
@@ -165,10 +165,10 @@ def hero_work(hero_amount):
     count_find_work_button = 0
     while is_not_button_status:
         if work_not_active_button is not None:
-            pyautogui.moveTo(work_not_active_button, duration=0.5)
+            pyautogui.moveTo(work_not_active_button, duration=0.1)
             is_not_button_status = False
         elif work_active_button is not None:
-            pyautogui.moveTo(work_active_button, duration=0.5)
+            pyautogui.moveTo(work_active_button, duration=0.1)
             is_not_button_status = False
         elif count_find_work_button >= 10:
             screenshot_err("find-work-button-more")
@@ -184,9 +184,9 @@ def hero_work(hero_amount):
         return
 
     # set drag display
-    time.sleep(1.5)
+    time.sleep(1)
     pyautogui.drag(0, -300, duration=0.2)
-    time.sleep(4)
+    time.sleep(3)
 
     # loop click hero to work!
     # but work not active is None will break loop
@@ -197,7 +197,7 @@ def hero_work(hero_amount):
         if work_not_active is not None:
             util.move_click(work_not_active)
             print('click hero work: ', hero_count + 1)
-            time.sleep(1)
+            time.sleep(0.5)
         elif work_active is not None:
             print("stop click hero work")
             break
@@ -212,7 +212,7 @@ def hero_work(hero_amount):
             hero_count -= 1
 
     click_close_button()
-    time.sleep(1.5)
+    time.sleep(1)
 
 
 def click_close_button():
@@ -223,7 +223,7 @@ def click_close_button():
 
 def treasure_hunt():
     print('===start treasure hunt===')
-    time.sleep(2)
+    time.sleep(1)
     start_hunt = button.treasure_hunt()
 
     if start_hunt is not None:
