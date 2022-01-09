@@ -47,7 +47,7 @@ def work_not_active():
 
 def work_active():
     work_active_button = pyautogui.locateOnScreen(
-        util.im_path('work-active.png'), grayscale=True, confidence=.95)
+        util.im_path('work-active.png'), grayscale=True, confidence=.90)
     return work_active_button
 
 

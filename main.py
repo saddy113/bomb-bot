@@ -115,6 +115,8 @@ def main():
             count_timeout = time_out(count_timeout)
 
         click_close_button()
+        if time_back > count_down or time_back < 0:
+            time_back = cal_time_click_back(randrange(reset_position_time), count_down)
 
 
 def login(wallet_button):
