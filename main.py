@@ -179,10 +179,12 @@ def hero_work(hero_amount):
             count_find_work_button += 1
             print('find not work button')
             screenshot_err("not-work-button")
-            click_close_button()
             time.sleep(1)
+            work_not_active_button = button.work_not_active()
+            work_active_button = button.work_active()
 
     if count_find_work_button >= 10:
+        click_close_button()
         return
 
     # set drag display
