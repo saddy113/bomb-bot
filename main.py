@@ -6,6 +6,7 @@ import sys
 import pyautogui
 import pygetwindow
 from random import randrange
+import configparser
 
 # from PIL import Image
 
@@ -16,10 +17,13 @@ import util
 def main():
     print('====START BOT BOMB====')
     print('***Do not cover the game screen***')
-    input_display = input('Browser Amount: ') or 1
-    input_countdown = input('COUNT DOWN SETUP HERO (min): ') or 40
-    hero_amount = input('HERO AMOUNT (number): ') or 15
-    reset_position_time = input('Return to main page (min): ') or 2
+
+    config_file = configparser.SafeConfigParser()
+    config_file.read('config')
+    input_display = config_file.get('DEFAULT', 'DISPLAY')
+    input_countdown = config_file.get('DEFAULT', 'COUNTDOWN')
+    hero_amount = config_file.get('DEFAULT', 'HERO')
+    reset_position_time = config_file.get('DEFAULT', 'TIME_TO_MAIN')
 
     input_display = int(input_display)
     input_countdown = int(input_countdown)
@@ -49,7 +53,7 @@ def main():
         print('go to main page in', time_back, 'sec')
         count_down -= 1
         if count_down < 0:
-            count_down = randrange(init_time)
+            count_down = init_time
 
         # set button
         wallet_buttons = list(button.wallet())
@@ -93,7 +97,7 @@ def main():
                 if count_down <= 1:
                     util.move_click(close_hunt_button)
                     if close_hunt_button == close_hunt_buttons[-1]:
-                        count_down = randrange(init_time)
+                        count_down = init_time
                         count_timeout = 0
                         time_back = cal_time_click_back(randrange(reset_position_time), count_down)
                 else:
@@ -232,6 +236,7 @@ def treasure_hunt():
 
     if start_hunt is not None:
         util.move_click(start_hunt)
+        time.sleep(3)
 
 
 def time_out(count_timeout, name='not_name'):
